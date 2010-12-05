@@ -5,6 +5,76 @@
     xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     version="2.5">
+    <!--
+        ***** GAE 1.3.0 appears to handle server-side state saving.
+        *****
+    -->
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+    <!-- GAE Bug 1506 JSP 2.1 API but 2.0 Implementation -->
+    <context-param>
+        <param-name>com.sun.faces.expressionFactory</param-name>
+        <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+    </context-param>
+    <context-param>
+        <description>
+      Set this flag to true if you want the JavaServer Faces
+      Reference Implementation to validate the XML in your
+      faces-config.xml resources against the DTD. Default
+      value is false.
+    </description>
+        <param-name>com.sun.faces.validateXml</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--
+        ***** Accommodate Single-Threaded Requirement of Google
+        AppEngine
+    -->
+    <context-param>
+        <description>
+      When enabled, the runtime initialization and default ResourceHandler
+      implementation will use threads to perform their functions. Set this 
+      value to false if threads aren't desired (as in the case of running 
+      within the Google Application Engine).
+
+      Note that when this option is disabled, the ResourceHandler will not 
+      pick up new versions of resources when ProjectStage is development.
+    </description>
+        <param-name>com.sun.faces.enableThreading</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <!-- Faces Servlet -->
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    <servlet>
+        <servlet-name>Resource Servlet</servlet-name>
+        <servlet-class>org.primefaces.resource.ResourceServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Resource Servlet</servlet-name>
+        <url-pattern>/primefaces_resource/*</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <display-name>Restrict direct access to XHTML files</display-name>
+        <web-resource-collection>
+            <web-resource-name>XHTML files</web-resource-name>
+            <url-pattern>*.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
     <servlet>
         <servlet-name>rawPanoServlet</servlet-name>
         <servlet-class>net.sourcewalker.kugeln.RawPanoramaServlet</servlet-class>
@@ -14,6 +84,6 @@
         <url-pattern>/pano/raw</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsf</welcome-file>
     </welcome-file-list>
 </web-app>
