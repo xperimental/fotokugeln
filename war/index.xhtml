@@ -13,5 +13,29 @@
     <title>Fotokugeln</title>
 </h:head>
 <h:body id="body">
+    <h1>Fotokugeln</h1>
+    <p:dataTable
+        var="pano"
+        value="#{panoramaTableBean.panoramas}">
+        <p:column>
+            <f:facet name="header">
+            </f:facet>
+            <h:graphicImage value="#{pano.thumbnailUrl}" />
+        </p:column>
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="Name" />
+            </f:facet>
+            <h:outputText value="#{pano.name}" />
+        </p:column>
+        <p:column>
+            <f:facet name="header">
+            </f:facet>
+            <h:outputLink value="/edit.jsp?key=#{pano.keyString}">Edit</h:outputLink>
+        </p:column>
+    </p:dataTable>
+    <hr />
+    <h3>Upload new panorama</h3>
+    <p:fileUpload fileUploadListener="#{uploadBean.handleUpload}" />
 </h:body>
 </html>

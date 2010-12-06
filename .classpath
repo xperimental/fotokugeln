@@ -3,5 +3,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/el-api-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/el-impl-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-api.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsf-impl-gae.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/primefaces-2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/serializer.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xalan.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xsltc.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
