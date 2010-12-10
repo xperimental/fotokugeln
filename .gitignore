@@ -11,5 +11,6 @@ war/WEB-INF/lib/geronimo-jta_1.1_spec-1.1.1.jar
 war/WEB-INF/lib/gwt-servlet.jar
 war/WEB-INF/lib/jdo2-api-2.3-eb.jar
 war/WEB-INF/lib/jsr107cache-1.1.jar
+war/dashboard/
 download/
 

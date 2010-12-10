@@ -13,7 +13,26 @@
         <servlet-name>rawPanoServlet</servlet-name>
         <url-pattern>/pano/raw</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>panoramaService</servlet-name>
+        <servlet-class>net.sourcewalker.kugeln.gwt.dashboard.server.PanoramaServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>panoramaService</servlet-name>
+        <url-pattern>/dashboard/panoramas</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>userInfoService</servlet-name>
+        <servlet-class>net.sourcewalker.kugeln.gwt.dashboard.server.UserInfoServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userInfoService</servlet-name>
+        <url-pattern>/dashboard/userInfo</url-pattern>
+    </servlet-mapping>
+    
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
