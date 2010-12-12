@@ -5,6 +5,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
@@ -24,16 +25,20 @@ public class Panorama {
     private String rawBlob;
 
     @Persistent
-    private byte[] thumbnail;
+    private Blob thumbnail;
 
     @Persistent
     private PanoramaStatus status;
+
+    @Persistent
+    private String statusText;
 
     public Panorama(String owner, String title, String rawBlob) {
         this.owner = owner;
         this.title = title;
         this.rawBlob = rawBlob;
         this.status = PanoramaStatus.NEW;
+        this.statusText = null;
     }
 
     public String getTitle() {
@@ -44,12 +49,17 @@ public class Panorama {
         this.title = title;
     }
 
-    public byte[] getThumbnail() {
+    public Blob getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(byte[] thumbnail) {
+    public void setThumbnail(Blob thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public boolean hasThumbnail() {
+        return thumbnail != null && thumbnail.getBytes() != null
+                && thumbnail.getBytes().length > 0;
     }
 
     public Key getKey() {
@@ -70,6 +80,14 @@ public class Panorama {
 
     public void setStatus(PanoramaStatus status) {
         this.status = status;
+    }
+
+    public String getStatusText() {
+        return statusText;
+    }
+
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
     }
 
 }

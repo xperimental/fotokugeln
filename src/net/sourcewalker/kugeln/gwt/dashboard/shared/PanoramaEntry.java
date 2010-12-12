@@ -9,6 +9,7 @@ public class PanoramaEntry implements Serializable {
     private String key;
     private String name;
     private String status;
+    private boolean thumbnail;
 
     public String getKey() {
         return key;
@@ -22,6 +23,10 @@ public class PanoramaEntry implements Serializable {
         return status;
     }
 
+    public boolean hasThumbnail() {
+        return thumbnail;
+    }
+
     public void setKey(String key) {
         this.key = key;
     }
@@ -32,6 +37,10 @@ public class PanoramaEntry implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setThumbnail(boolean thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
 }

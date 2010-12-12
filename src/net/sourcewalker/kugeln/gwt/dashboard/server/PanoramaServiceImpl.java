@@ -60,7 +60,14 @@ public class PanoramaServiceImpl extends RemoteServiceServlet implements
         PanoramaEntry result = new PanoramaEntry();
         result.setKey(KeyFactory.keyToString(source.getKey()));
         result.setName(source.getTitle());
-        result.setStatus(source.getStatus().toString());
+        if (source.getStatusText() != null
+                && source.getStatusText().length() > 0) {
+            result.setStatus(source.getStatus().toString() + " ("
+                    + source.getStatusText() + ")");
+        } else {
+            result.setStatus(source.getStatus().toString());
+        }
+        result.setThumbnail(source.hasThumbnail());
         return result;
     }
 

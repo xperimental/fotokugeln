@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -21,6 +25,7 @@ public class RawPanoramaServlet extends HttpServlet {
 
     private BlobstoreService blobStore;
     private UserService userService;
+    private Queue taskQueue;
 
     @Override
     public void init() throws ServletException {
@@ -28,6 +33,7 @@ public class RawPanoramaServlet extends HttpServlet {
 
         blobStore = BlobstoreServiceFactory.getBlobstoreService();
         userService = UserServiceFactory.getUserService();
+        taskQueue = QueueFactory.getDefaultQueue();
     }
 
     @Override
@@ -51,6 +57,11 @@ public class RawPanoramaServlet extends HttpServlet {
                     PersistenceManager pm = PersistenceManagerFactory.get();
                     try {
                         pm.makePersistent(newPano);
+                        TaskOptions task = TaskOptions.Builder.withUrl(
+                                "/pano/process").param("panoKey",
+                                KeyFactory.keyToString(newPano.getKey()))
+                                .countdownMillis(5000);
+                        taskQueue.add(task);
                     } catch (Exception e) {
                         throw new RuntimeException("Error saving panorama: "
                                 + e.getMessage(), e);

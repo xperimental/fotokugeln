@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -61,6 +62,11 @@ public class PanoramaTable implements EntryPoint {
                     removeButton.addClickHandler(new RemoveHandler(result[i]
                             .getKey()));
 
+                    if (result[i].hasThumbnail()) {
+                        panoramaTable.setWidget(i + 1, 0,
+                                new Image("/pano/thumbnail?panoKey="
+                                        + result[i].getKey()));
+                    }
                     panoramaTable.setText(i + 1, 1, result[i].getName());
                     panoramaTable.setText(i + 1, 2, result[i].getStatus());
                     panoramaTable.setWidget(i + 1, 3, editButton);
