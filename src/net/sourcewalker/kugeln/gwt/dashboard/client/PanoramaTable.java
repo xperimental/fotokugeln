@@ -94,7 +94,8 @@ public class PanoramaTable implements EntryPoint {
                                         + result[i].getKey()));
                     }
                     panoramaTable.setText(i + 1, 1, result[i].getName());
-                    panoramaTable.setText(i + 1, 2, result[i].getStatus());
+                    panoramaTable.setText(i + 1, 2,
+                            getStatusDescription(result[i].getStatus()));
                     panoramaTable.setWidget(i + 1, 3, editButton);
                     panoramaTable.setWidget(i + 1, 4, removeButton);
                 }
@@ -104,6 +105,20 @@ public class PanoramaTable implements EntryPoint {
             public void onFailure(Throwable caught) {
             }
         });
+    }
+
+    protected String getStatusDescription(String status) {
+        if ("OK".equals(status)) {
+            return "Live";
+        } else if ("NEW".equals(status)) {
+            return "Waiting for processing...";
+        } else if ("THUMBNAIL".equals(status)) {
+            return "Generating thumbnail...";
+        } else if ("TILING".equals(status)) {
+            return "Generating tiles...";
+        } else {
+            return status;
+        }
     }
 
     public void removePanorama(String key) {
