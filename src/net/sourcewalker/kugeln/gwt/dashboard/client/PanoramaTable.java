@@ -8,7 +8,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -35,8 +35,7 @@ public class PanoramaTable implements EntryPoint {
 
             @Override
             public void onClick(ClickEvent event) {
-                Location.replace("/upload.jsp?ref="
-                        + URL.encode(Location.getHref()));
+                Location.replace("/upload.jsp");
             }
         });
         panoramaPanel.add(uploadButton);
@@ -44,6 +43,13 @@ public class PanoramaTable implements EntryPoint {
         RootPanel.get("panoramaTable").add(panoramaPanel);
 
         updatePanoramas();
+        new Timer() {
+
+            @Override
+            public void run() {
+                updatePanoramas();
+            }
+        }.scheduleRepeating(5000);
     }
 
     private void updatePanoramas() {
