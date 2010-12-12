@@ -11,6 +11,9 @@ import net.sourcewalker.kugeln.PersistenceManagerFactory;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaEntry;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaService;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -22,12 +25,14 @@ public class PanoramaServiceImpl extends RemoteServiceServlet implements
         PanoramaService {
 
     private UserService userService;
+    private BlobstoreService blobStore;
 
     @Override
     public void init() throws ServletException {
         super.init();
 
         userService = UserServiceFactory.getUserService();
+        blobStore = BlobstoreServiceFactory.getBlobstoreService();
     }
 
     @SuppressWarnings("unchecked")
@@ -73,7 +78,17 @@ public class PanoramaServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public boolean removePanorama(String key) {
-        // TODO Auto-generated method stub
+        PersistenceManager pm = PersistenceManagerFactory.get();
+        try {
+            Panorama panorama = pm.getObjectById(Panorama.class, KeyFactory
+                    .stringToKey(key));
+            blobStore.delete(new BlobKey(panorama.getRawBlob()));
+            pm.deletePersistent(panorama);
+            return true;
+        } catch (Exception e) {
+        } finally {
+            pm.close();
+        }
         return false;
     }
 

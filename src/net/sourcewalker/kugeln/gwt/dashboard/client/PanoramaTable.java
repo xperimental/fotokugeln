@@ -29,11 +29,6 @@ public class PanoramaTable implements EntryPoint {
     public void onModuleLoad() {
         VerticalPanel panoramaPanel = new VerticalPanel();
 
-        panoramaTable.setText(0, 0, "Thumbnail");
-        panoramaTable.setText(0, 1, "Name");
-        panoramaTable.setText(0, 2, "Status");
-        panoramaTable.setText(0, 3, "Edit");
-        panoramaTable.setText(0, 4, "Remove");
         panoramaPanel.add(panoramaTable);
 
         uploadButton.addClickHandler(new ClickHandler() {
@@ -56,6 +51,13 @@ public class PanoramaTable implements EntryPoint {
 
             @Override
             public void onSuccess(PanoramaEntry[] result) {
+                panoramaTable.removeAllRows();
+                panoramaTable.setText(0, 0, "Thumbnail");
+                panoramaTable.setText(0, 1, "Name");
+                panoramaTable.setText(0, 2, "Status");
+                panoramaTable.setText(0, 3, "Edit");
+                panoramaTable.setText(0, 4, "Remove");
+
                 for (int i = 0; i < result.length; i++) {
                     Button editButton = new Button("Edit");
                     Button removeButton = new Button("-");
