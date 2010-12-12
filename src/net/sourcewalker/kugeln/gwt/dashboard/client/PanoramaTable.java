@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
@@ -94,8 +95,13 @@ public class PanoramaTable implements EntryPoint {
                                         + result[i].getKey()));
                     }
                     panoramaTable.setText(i + 1, 1, result[i].getName());
-                    panoramaTable.setText(i + 1, 2,
-                            getStatusDescription(result[i].getStatus()));
+                    if ("OK".equals(result[i].getStatus())) {
+                        panoramaTable.setWidget(i + 1, 2, new Anchor("Live",
+                                "/view.jsp?panoKey=" + result[i].getKey()));
+                    } else {
+                        panoramaTable.setText(i + 1, 2,
+                                getStatusDescription(result[i].getStatus()));
+                    }
                     panoramaTable.setWidget(i + 1, 3, editButton);
                     panoramaTable.setWidget(i + 1, 4, removeButton);
                 }
@@ -108,9 +114,7 @@ public class PanoramaTable implements EntryPoint {
     }
 
     protected String getStatusDescription(String status) {
-        if ("OK".equals(status)) {
-            return "Live";
-        } else if ("NEW".equals(status)) {
+        if ("NEW".equals(status)) {
             return "Waiting for processing...";
         } else if ("THUMBNAIL".equals(status)) {
             return "Generating thumbnail...";
