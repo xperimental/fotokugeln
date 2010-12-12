@@ -3,6 +3,9 @@ package net.sourcewalker.kugeln.gwt.dashboard.client;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaEntry;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaService;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaServiceAsync;
+import net.sourcewalker.kugeln.gwt.dashboard.shared.UserInfo;
+import net.sourcewalker.kugeln.gwt.dashboard.shared.UserInfoService;
+import net.sourcewalker.kugeln.gwt.dashboard.shared.UserInfoServiceAsync;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -20,15 +23,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class PanoramaTable implements EntryPoint {
 
+    private VerticalPanel panoramaPanel = new VerticalPanel();
     private FlexTable panoramaTable = new FlexTable();
     private Button uploadButton = new Button("Upload new panorama");
     private PanoramaServiceAsync panoramaService = GWT
             .create(PanoramaService.class);
+    private UserInfoServiceAsync userService = GWT
+            .create(UserInfoService.class);
 
     @Override
     public void onModuleLoad() {
-        VerticalPanel panoramaPanel = new VerticalPanel();
-
         panoramaPanel.add(panoramaTable);
 
         uploadButton.addClickHandler(new ClickHandler() {
@@ -50,6 +54,20 @@ public class PanoramaTable implements EntryPoint {
                 updatePanoramas();
             }
         }.scheduleRepeating(5000);
+
+        userService.getCurrentUser(new AsyncCallback<UserInfo>() {
+
+            @Override
+            public void onSuccess(UserInfo result) {
+                boolean loggedIn = result != null;
+                panoramaPanel.setVisible(loggedIn);
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                panoramaPanel.setVisible(false);
+            }
+        });
     }
 
     private void updatePanoramas() {
