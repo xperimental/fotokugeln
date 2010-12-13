@@ -24,6 +24,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>tileServlet</servlet-name>
+        <servlet-class>net.sourcewalker.kugeln.TileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>tileServlet</servlet-name>
+        <url-pattern>/pano/tile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>processingServlet</servlet-name>
         <servlet-class>net.sourcewalker.kugeln.ProcessingServlet</servlet-class>
     </servlet>

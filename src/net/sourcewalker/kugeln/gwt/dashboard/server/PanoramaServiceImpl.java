@@ -7,6 +7,7 @@ import javax.jdo.Query;
 import javax.servlet.ServletException;
 
 import net.sourcewalker.kugeln.Panorama;
+import net.sourcewalker.kugeln.PanoramaTile;
 import net.sourcewalker.kugeln.PersistenceManagerFactory;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaEntry;
 import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaService;
@@ -14,6 +15,7 @@ import net.sourcewalker.kugeln.gwt.dashboard.shared.PanoramaService;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -80,16 +82,27 @@ public class PanoramaServiceImpl extends RemoteServiceServlet implements
     public boolean removePanorama(String key) {
         PersistenceManager pm = PersistenceManagerFactory.get();
         try {
-            Panorama panorama = pm.getObjectById(Panorama.class, KeyFactory
-                    .stringToKey(key));
+            Key panoKey = KeyFactory.stringToKey(key);
+            Panorama panorama = pm.getObjectById(Panorama.class, panoKey);
             blobStore.delete(new BlobKey(panorama.getRawBlob()));
             pm.deletePersistent(panorama);
+            deleteTiles(pm, panoKey);
             return true;
         } catch (Exception e) {
         } finally {
             pm.close();
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void deleteTiles(PersistenceManager pm, Key panoKey) {
+        Query query = pm.newQuery(PanoramaTile.class);
+        query.setFilter("panoramaKey == panoParam");
+        query
+                .declareParameters("com.google.appengine.api.datastore.Key panoParam");
+        List<PanoramaTile> tiles = (List<PanoramaTile>) query.execute(panoKey);
+        pm.deletePersistentAll(tiles);
     }
 
 }

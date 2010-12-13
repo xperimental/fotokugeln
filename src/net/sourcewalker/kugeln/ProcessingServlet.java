@@ -1,12 +1,16 @@
 package net.sourcewalker.kugeln;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 
 import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobInfoFactory;
@@ -27,7 +31,9 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 @SuppressWarnings("serial")
 public class ProcessingServlet extends HttpServlet {
 
+    private static final Log LOG = LogFactory.getLog(ProcessingServlet.class);
     private static final int BUF_SIZE = 1000000;
+
     private BlobstoreService blobStore;
     private Queue taskQueue;
     private BlobInfoFactory infoFactory;
@@ -61,6 +67,13 @@ public class ProcessingServlet extends HttpServlet {
                     break;
                 case THUMBNAIL:
                     if (generateThumbnail(rawImage, panorama)) {
+                        panorama.setStatus(PanoramaStatus.TILING);
+                    }
+                    break;
+                case TILING:
+                    List<PanoramaTile> tiles = generateTiles(rawImage, panorama);
+                    if (tiles != null && tiles.size() > 0) {
+                        saveTiles(pm, tiles);
                         panorama.setStatus(PanoramaStatus.OK);
                     }
                     break;
@@ -75,7 +88,9 @@ public class ProcessingServlet extends HttpServlet {
             } catch (Exception e) {
                 if (panorama != null) {
                     panorama.setStatus(PanoramaStatus.ERROR);
-                    panorama.setStatusText("Invalid image data!");
+                    panorama.setStatusText("Processing error: "
+                            + e.getMessage());
+                    LOG.error(e);
                 }
             } finally {
                 pm.close();
@@ -83,6 +98,21 @@ public class ProcessingServlet extends HttpServlet {
         }
         resp.setContentType("text/plain");
         resp.getWriter().println("ok");
+    }
+
+    private void saveTiles(PersistenceManager pm, List<PanoramaTile> tiles) {
+        for (PanoramaTile tile : tiles) {
+            pm.makePersistent(tile);
+        }
+    }
+
+    private List<PanoramaTile> generateTiles(Image rawImage, Panorama panorama) {
+        TileGenerator generator = new TileGenerator(panorama.getKey(), rawImage);
+        if (generator.run()) {
+            return generator.getTiles();
+        } else {
+            return null;
+        }
     }
 
     private boolean generateThumbnail(Image rawImage, Panorama panorama) {
@@ -122,6 +152,8 @@ public class ProcessingServlet extends HttpServlet {
         if (width >= 512) {
             if ((width & (width - 1)) == 0) {
                 if (2 * height == width) {
+                    panorama.setRawWidth(width);
+                    panorama.setRawHeight(height);
                     panorama.setStatus(PanoramaStatus.THUMBNAIL);
                     return;
                 }

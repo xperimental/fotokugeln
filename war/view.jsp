@@ -6,6 +6,7 @@
 <%@page import="net.sourcewalker.kugeln.Panorama"%>
 <%@page import="com.google.appengine.api.datastore.KeyFactory"%>
 <%@page import="net.sourcewalker.kugeln.PanoramaStatus"%>
+<%@page import="net.sourcewalker.kugeln.TileGenerator"%>
 <%
 String panoKey = request.getParameter("panoKey");
 if (panoKey == null || panoKey.length() == 0) {
@@ -26,10 +27,10 @@ xmlns:atom="http://www.w3.org/2005/Atom">
   <PhotoOverlay>
     <name><%=pano.getTitle()%></name>
     <Camera>
-      <longitude>0</longitude>
-      <latitude>0</latitude>
+      <longitude><%=pano.getLongitude()%></longitude>
+      <latitude><%=pano.getLatitude()%></latitude>
       <altitude>11.0</altitude>
-      <heading>0.0</heading>
+      <heading><%=pano.getHeading()%></heading>
       <tilt>90.0</tilt>
       <roll>0.0</roll>
       <altitudeMode>relativeToGround</altitudeMode>
@@ -56,7 +57,7 @@ xmlns:atom="http://www.w3.org/2005/Atom">
     <Point>
       <altitudeMode>relativeToGround</altitudeMode>
       <gx:altitudeMode>relativeToGround</gx:altitudeMode>
-      <coordinates>0,0,11.0</coordinates>
+      <coordinates><%=pano.getLongitude()%>,<%=pano.getLatitude()%>,11.0</coordinates>
     </Point>
     <ViewVolume>
       <leftFov>-180</leftFov>
@@ -67,14 +68,14 @@ xmlns:atom="http://www.w3.org/2005/Atom">
     </ViewVolume>
     <shape>sphere</shape>
     <Icon>
-      <href>http://<%=request.getServerName()%>:<%=request.getServerPort()%>/pano/raw?key=<%=pano.getRawBlob()%></href>
+      <href>http://<%=request.getServerName()%>:<%=request.getServerPort()%>/pano/tile?panoKey=<%=panoKey%>&amp;l=$[level]&amp;x=$[x]&amp;y=$[y]</href>
     </Icon>
-    <!-- <ImagePyramid>
-      <tileSize>512</tileSize>
-      <maxWidth>16384</maxWidth>
-      <maxHeight>8192</maxHeight>
+    <ImagePyramid>
+      <tileSize><%=TileGenerator.TILE_SIZE%></tileSize>
+      <maxWidth><%=pano.getRawWidth()%></maxWidth>
+      <maxHeight><%=pano.getRawHeight()%></maxHeight>
       <gridOrigin>upperLeft</gridOrigin>
-    </ImagePyramid>-->
+    </ImagePyramid>
   </PhotoOverlay>
 </kml>
 <%

@@ -25,6 +25,12 @@ public class Panorama {
     private String rawBlob;
 
     @Persistent
+    private int rawWidth;
+
+    @Persistent
+    private int rawHeight;
+
+    @Persistent
     private Blob thumbnail;
 
     @Persistent
@@ -32,6 +38,15 @@ public class Panorama {
 
     @Persistent
     private String statusText;
+
+    @Persistent
+    private double latitude;
+
+    @Persistent
+    private double longitude;
+
+    @Persistent
+    private float heading;
 
     public Panorama(String owner, String title, String rawBlob) {
         this.owner = owner;
@@ -88,6 +103,46 @@ public class Panorama {
 
     public void setStatusText(String statusText) {
         this.statusText = statusText;
+    }
+
+    public int getRawWidth() {
+        return rawWidth;
+    }
+
+    public void setRawWidth(int rawWidth) {
+        this.rawWidth = rawWidth;
+    }
+
+    public int getRawHeight() {
+        return rawHeight;
+    }
+
+    public void setRawHeight(int rawHeight) {
+        this.rawHeight = rawHeight;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getHeading() {
+        return heading;
+    }
+
+    public void setHeading(float heading) {
+        this.heading = heading;
     }
 
 }
