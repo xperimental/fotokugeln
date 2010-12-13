@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -22,6 +24,8 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 @SuppressWarnings("serial")
 public class RawPanoramaServlet extends HttpServlet {
+
+    private static final long MAX_BLOB_SIZE = 30 * 1024 * 1024;
 
     private BlobstoreService blobStore;
     private UserService userService;
@@ -50,6 +54,7 @@ public class RawPanoramaServlet extends HttpServlet {
                 blobStore
                         .delete(uploadedBlobs.values().toArray(new BlobKey[0]));
             } else {
+                BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
                 String title = req.getParameter("title");
                 if (title != null && title.length() > 0) {
                     Panorama newPano = new Panorama(currentUser.getUserId(),
@@ -57,11 +62,23 @@ public class RawPanoramaServlet extends HttpServlet {
                     PersistenceManager pm = PersistenceManagerFactory.get();
                     try {
                         pm.makePersistent(newPano);
-                        TaskOptions task = TaskOptions.Builder.withUrl(
-                                "/pano/process").param("panoKey",
-                                KeyFactory.keyToString(newPano.getKey()))
-                                .countdownMillis(5000);
-                        taskQueue.add(task);
+                        if (blobInfo.getContentType().startsWith("image/")) {
+                            if (blobInfo.getSize() < MAX_BLOB_SIZE) {
+                                TaskOptions task = TaskOptions.Builder.withUrl(
+                                        "/pano/process").param(
+                                        "panoKey",
+                                        KeyFactory
+                                                .keyToString(newPano.getKey()))
+                                        .countdownMillis(5000);
+                                taskQueue.add(task);
+                            } else {
+                                newPano.setStatus(PanoramaStatus.ERROR);
+                                newPano.setStatusText("File too large!");
+                            }
+                        } else {
+                            newPano.setStatus(PanoramaStatus.ERROR);
+                            newPano.setStatusText("File is no image!");
+                        }
                     } catch (Exception e) {
                         throw new RuntimeException("Error saving panorama: "
                                 + e.getMessage(), e);
