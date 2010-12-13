@@ -55,7 +55,7 @@ xmlns:atom="http://www.w3.org/2005/Atom">
     </Style>
     <Point>
       <altitudeMode>relativeToGround</altitudeMode>
-      <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+      <gx:altitudeMode>relativeToGround</gx:altitudeMode>
       <coordinates>0,0,11.0</coordinates>
     </Point>
     <ViewVolume>
