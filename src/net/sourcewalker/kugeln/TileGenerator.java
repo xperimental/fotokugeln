@@ -3,8 +3,8 @@ package net.sourcewalker.kugeln;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Blob;
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.images.Composite;
 import com.google.appengine.api.images.CompositeTransform;
 import com.google.appengine.api.images.Image;
@@ -49,21 +49,21 @@ public class TileGenerator {
         return normalTile;
     }
 
-    private final Key panoKey;
-    private final Image rawImage;
+    private final Panorama panorama;
+    private final BlobKey rawKey;
     private final List<PanoramaTile> tiles;
     private final ImagesService imageService;
 
-    public TileGenerator(Key panoramaKey, Image rawImage) {
-        this.panoKey = panoramaKey;
-        this.rawImage = rawImage;
+    public TileGenerator(Panorama panorama, BlobKey rawKey) {
+        this.panorama = panorama;
+        this.rawKey = rawKey;
         this.tiles = new ArrayList<PanoramaTile>();
         this.imageService = ImagesServiceFactory.getImagesService();
     }
 
     public boolean run() {
-        int inputWidth = rawImage.getWidth();
-        int inputHeight = rawImage.getHeight();
+        int inputWidth = panorama.getRawWidth();
+        int inputHeight = panorama.getRawHeight();
         int xTiles = inputWidth / TILE_SIZE;
         int yTiles = inputHeight / TILE_SIZE;
         int levels = (int) binLog(Math.min(inputWidth, inputHeight) / TILE_SIZE) + 2;
@@ -71,7 +71,7 @@ public class TileGenerator {
             if (i == 0) {
                 Transform thumbnailTransform = ImagesServiceFactory.makeResize(
                         TILE_SIZE, TILE_SIZE / 2);
-                Image thumbnailTile = copyAndApply(rawImage, thumbnailTransform);
+                Image thumbnailTile = applyRawTransform(thumbnailTransform);
                 List<Composite> composites = new ArrayList<Composite>();
                 for (int y = 0; y < xTiles; y++) {
                     int y1 = y * TILE_SIZE / xTiles;
@@ -95,7 +95,7 @@ public class TileGenerator {
                         CompositeTransform transform = getNormalTileTransform(
                                 top, bottom, left, right, inputWidth,
                                 inputHeight);
-                        Image tile = copyAndApply(rawImage, transform);
+                        Image tile = applyRawTransform(transform);
                         writeTile(i, x, y, tile);
                         count++;
                     }
@@ -107,8 +107,8 @@ public class TileGenerator {
         return true;
     }
 
-    private Image copyAndApply(Image input, Transform transform) {
-        Image output = ImagesServiceFactory.makeImage(input.getImageData());
+    private Image applyRawTransform(Transform transform) {
+        Image output = ImagesServiceFactory.makeImageFromBlob(rawKey);
         imageService.applyTransform(transform, output, outputSettings);
         return output;
     }
@@ -116,7 +116,7 @@ public class TileGenerator {
     private void writeTile(int level, int column, int row, Image data) {
         PanoramaTile tile = new PanoramaTile();
         tile.setData(new Blob(data.getImageData()));
-        tile.setPanoramaKey(panoKey);
+        tile.setPanoramaKey(panorama.getKey());
         tile.setPosition(getPosition(level, column, row));
         tiles.add(tile);
     }

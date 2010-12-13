@@ -60,18 +60,17 @@ public class ProcessingServlet extends HttpServlet {
                 panorama = pm.getObjectById(Panorama.class, KeyFactory
                         .stringToKey(panoKey));
                 BlobKey rawKey = new BlobKey(panorama.getRawBlob());
-                Image rawImage = getImageFromBlobstore(rawKey);
                 switch (panorama.getStatus()) {
                 case NEW:
-                    checkRawSize(rawImage, panorama);
+                    checkRawSize(rawKey, panorama);
                     break;
                 case THUMBNAIL:
-                    if (generateThumbnail(rawImage, panorama)) {
+                    if (generateThumbnail(rawKey, panorama)) {
                         panorama.setStatus(PanoramaStatus.TILING);
                     }
                     break;
                 case TILING:
-                    List<PanoramaTile> tiles = generateTiles(rawImage, panorama);
+                    List<PanoramaTile> tiles = generateTiles(rawKey, panorama);
                     if (tiles != null && tiles.size() > 0) {
                         saveTiles(pm, tiles);
                         panorama.setStatus(PanoramaStatus.OK);
@@ -92,6 +91,8 @@ public class ProcessingServlet extends HttpServlet {
                             + e.getMessage());
                     LOG.error(e);
                 }
+                throw new RuntimeException("Error during processing: "
+                        + e.getMessage(), e);
             } finally {
                 pm.close();
             }
@@ -106,8 +107,8 @@ public class ProcessingServlet extends HttpServlet {
         }
     }
 
-    private List<PanoramaTile> generateTiles(Image rawImage, Panorama panorama) {
-        TileGenerator generator = new TileGenerator(panorama.getKey(), rawImage);
+    private List<PanoramaTile> generateTiles(BlobKey rawKey, Panorama panorama) {
+        TileGenerator generator = new TileGenerator(panorama, rawKey);
         if (generator.run()) {
             return generator.getTiles();
         } else {
@@ -115,15 +116,16 @@ public class ProcessingServlet extends HttpServlet {
         }
     }
 
-    private boolean generateThumbnail(Image rawImage, Panorama panorama) {
+    private boolean generateThumbnail(BlobKey rawKey, Panorama panorama) {
         Transform resize = ImagesServiceFactory.makeResize(64, 32);
+        Image rawImage = ImagesServiceFactory.makeImageFromBlob(rawKey);
         Image thumbnail = imagesService.applyTransform(resize, rawImage,
                 OutputEncoding.JPEG);
         panorama.setThumbnail(new Blob(thumbnail.getImageData()));
         return true;
     }
 
-    private Image getImageFromBlobstore(BlobKey rawKey) {
+    private Image readImageFromBlobstore(BlobKey rawKey) {
         BlobInfo info = infoFactory.loadBlobInfo(rawKey);
         if (info.getContentType().startsWith("image/")) {
             byte[] data = new byte[(int) info.getSize()];
@@ -146,7 +148,8 @@ public class ProcessingServlet extends HttpServlet {
         }
     }
 
-    private void checkRawSize(Image rawImage, Panorama panorama) {
+    private void checkRawSize(BlobKey rawKey, Panorama panorama) {
+        Image rawImage = readImageFromBlobstore(rawKey);
         int width = rawImage.getWidth();
         int height = rawImage.getHeight();
         if (width >= 512) {
