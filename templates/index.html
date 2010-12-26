@@ -1,4 +1,53 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block body %}
-Giving your panoramas a spherical home in the internet!
+    {% if user %}
+        <table>
+            <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Delete</th>
+            </tr>
+            {% for pano in panorama_list %}
+                <tr>
+                    <td>
+                        <a href="/pano/raw/{{ pano.rawBlob.key }}">
+                            {% if pano.thumbnail %}
+                                <img src="/pano/thumbnail/{{ pano.thumbnail }}"/>
+                            {% else %}
+                                <img src="/static/no_thumb.png"/>
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        {{ pano.title }}
+                    </td>
+                    <td>
+                        {{ pano.status }}
+                    </td>
+                    <td>
+                        <a href="/pano/delete/{{ pano.key }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <th><label for="title">Title:</label></th>
+                    <td><input type="text" name="title"/></td>
+                </tr>
+                <tr>
+                    <th><label for="rawImage">Panorama image:</label></th>
+                    <td><input type="file" name="rawImage"></td>
+                </tr>
+                <tr>
+                    <th/>
+                    <td><input type="submit" value="Upload"/></td>
+                </tr>
+            </table>
+        </form>
+    {% else %}
+        Giving your panoramas a spherical home in Google Earth&trade;!
+    {% endif %}
 {% endblock %}

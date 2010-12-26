@@ -11,5 +11,17 @@ handlers:
   static_files: static/favicon.ico
   upload: static/favicon.ico
 
+- url: /pano/upload
+  login: required
+  script: fotokugeln.py
+
+- url: /pano/raw.*
+  login: required
+  script: fotokugeln.py
+
+- url: /pano/delete.*
+  login: required
+  script: fotokugeln.py
+
 - url: /.*
   script: fotokugeln.py

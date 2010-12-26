@@ -1,17 +1,18 @@
 from google.appengine.ext import db
+from google.appengine.ext import blobstore
 
 class Panorama(db.Model):
-    owner = db.IntegerProperty(required=True)
+    owner = db.UserProperty(required=True)
     title = db.StringProperty(required=True)
     status = db.StringProperty(required=True)
-    statusText = db.StringProperty(required=True)
-    thumbnail = db.BlobProperty(required=True)
-    heading = db.FloatProperty(required=True)
-    latitude = db.FloatProperty(required=True)
-    longitude = db.FloatProperty(required=True)
-    rawBlob = db.StringProperty(required=True)
-    rawHeight = db.IntegerProperty(required=True)
-    rawWidth = db.IntegerProperty(required=True)
+    statusText = db.StringProperty()
+    thumbnail = db.BlobProperty()
+    heading = db.FloatProperty()
+    latitude = db.FloatProperty()
+    longitude = db.FloatProperty()
+    rawBlob = blobstore.BlobReferenceProperty()
+    rawHeight = db.IntegerProperty()
+    rawWidth = db.IntegerProperty()
 
 class PanoramaTile(db.Model):
     data = db.BlobProperty(required=True)
