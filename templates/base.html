@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>Fotokugeln{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/fotokugeln.css" />
+</head>
+<body>
+<div class="userbox">
+{% if user %}
+    Hi {{ user }}! <a href="{{ logout_url }}">Logout</a>
+{% else %}
+    <a href="{{ login_url }}">Login</a>
+{% endif %}
+</div>
+<h1>Fotokugeln</h1>
+{% block body %}
+{% endblock %}
+</body>
+</html>
