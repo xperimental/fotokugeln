@@ -2,6 +2,7 @@ from google.appengine.ext.webapp import RequestHandler
 from google.appengine.ext.webapp.blobstore_handlers import BlobstoreDownloadHandler
 from google.appengine.ext import db
 from google.appengine.api import users
+from data.panorama import PanoramaTile
 
 class RawPanoHandler(BlobstoreDownloadHandler):
     def get(self, panoKey):
@@ -23,3 +24,18 @@ class ThumbnailHandler(RequestHandler):
         else:
             self.response.headers['Content-type'] = 'image/jpeg'
             self.response.out.write(panorama.thumbnail)
+
+class TileHandler(RequestHandler):
+    def get(self, panoKey, level, column, row):
+        panorama = db.get(panoKey)
+        if not panorama:
+            self.error(404)
+        else:
+            position = "%s:%s:%s" % (level, column, row)
+            tileList = PanoramaTile.all().filter("panoramaKey ==", panorama).filter("position ==", position).fetch(1)
+            if not tileList:
+                self.error(404)
+            else:
+                for tile in tileList:
+                    self.response.headers['Content-type'] = 'image/jpeg'
+                    self.response.out.write(tile.data)

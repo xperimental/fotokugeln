@@ -4,6 +4,7 @@ from data.panorama import PanoramaStatus
 from google.appengine.ext import blobstore
 from google.appengine.api import images
 from google.appengine.api import taskqueue
+from data.tiles import TileGenerator
 
 def queue(panorama):
     taskqueue.add(url='/pano/process/%s' % panorama.key(), name='process-%s-%s' % (panorama.key(), panorama.status))
@@ -26,7 +27,12 @@ class ProcessHandler(RequestHandler):
                     panorama.status = PanoramaStatus.TILES
                     queue(panorama)
                 elif panorama.status == PanoramaStatus.TILES:
-                    pass
+                    tiles = self.generateTiles(panorama)
+                    if tiles:
+                        self.saveTiles(tiles)
+                        panorama.status = PanoramaStatus.LIVE
+                    else:
+                        queue(panorama)
                 else:
                     pass
             except ValueError, detail:
@@ -67,3 +73,12 @@ class ProcessHandler(RequestHandler):
         reader = blobstore.BlobReader(blob)
         data = reader.read()
         return images.Image(data)
+
+    def generateTiles(self, panorama):
+        reader = blobstore.BlobReader(panorama.rawBlob)
+        generator = TileGenerator(panorama.key(), panorama.rawWidth, panorama.rawHeight, reader.read())
+        return generator.tiles
+
+    def saveTiles(self, tiles):
+        for tile in tiles:
+            tile.save()
