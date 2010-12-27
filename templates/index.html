@@ -11,7 +11,7 @@
             {% for pano in panorama_list %}
                 <tr>
                     <td>
-                        <a href="/pano/raw/{{ pano.rawBlob.key }}">
+                        <a href="/pano/raw/{{ pano.key }}">
                             {% if pano.thumbnail %}
                                 <img src="/pano/thumbnail/{{ pano.thumbnail }}"/>
                             {% else %}
