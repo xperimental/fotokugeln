@@ -23,7 +23,10 @@
                         {{ pano.title }}
                     </td>
                     <td>
-                        {{ pano.status }}
+                        {{ pano.statusDescription }}
+                        {% if pano.statusText %}
+                            ({{ pano.statusText }})
+                        {% endif %}
                     </td>
                     <td>
                         <a href="/pano/delete/{{ pano.key }}">Delete</a>
@@ -31,6 +34,7 @@
                 </tr>
             {% endfor %}
         </table>
+        <hr />
         <form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
             <table>
                 <tr>

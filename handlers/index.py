@@ -12,7 +12,7 @@ class IndexHandler(RequestHandler):
             template_values['user'] = current_user
             template_values['logout_url'] = users.create_logout_url('/')
 
-            template_values['panorama_list'] = Panorama.all().filter("owner = ", current_user).fetch(100)
+            template_values['panorama_list'] = Panorama.all().filter("owner = ", current_user)
             template_values['upload_url'] = blobstore.create_upload_url('/pano/upload')
         else:
             template_values['login_url'] = users.create_login_url('/')

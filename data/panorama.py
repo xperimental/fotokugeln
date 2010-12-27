@@ -21,6 +21,20 @@ class Panorama(db.Model):
     rawHeight = db.IntegerProperty()
     rawWidth = db.IntegerProperty()
 
+    def statusDescription(self):
+        if self.status == PanoramaStatus.NEW:
+            return "Waiting for processing..."
+        elif self.status == PanoramaStatus.THUMBNAIL:
+            return "Generating thumbnail..."
+        elif self.status == PanoramaStatus.TILES:
+            return "Tiling image..."
+        elif self.status == PanoramaStatus.LIVE:
+            return "Live"
+        elif self.status == PanoramaStatus.ERROR:
+            return "Error processing panorama"
+        else:
+            return "Unknown status"
+
 class PanoramaTile(db.Model):
     data = db.BlobProperty(required=True)
     panoramaKey = db.ReferenceProperty(Panorama, required=True)
