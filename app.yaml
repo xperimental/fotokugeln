@@ -23,5 +23,9 @@ handlers:
   login: required
   script: fotokugeln.py
 
+- url: /pano/process.*
+  login: admin
+  script: fotokugeln.py
+
 - url: /.*
   script: fotokugeln.py
