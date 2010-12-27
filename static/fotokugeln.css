@@ -1,14 +1,18 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+p {
+    margin-bottom: 5pt;
+}
+
 a {
     text-decoration: none;
 }
 
 img {
     border: 0px;
-}
-
-* {
-    margin: 0px;
-    padding: 0px;
 }
 
 .userbox {
@@ -110,4 +114,14 @@ img {
 
 .upload-field {
     display: table-cell;
+}
+
+.upload-notice {
+    border: 1px solid black;
+    padding: 5px;
+    background-color: darkgray;
+    color: black;
+    font-size: 10pt;
+    font-family: serif;
+    width: 100px;
 }
