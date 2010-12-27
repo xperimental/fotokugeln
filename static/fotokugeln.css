@@ -6,12 +6,7 @@ img {
     border: 0px;
 }
 
-body {
-    margin: 0px;
-    padding: 0px;
-}
-
-div {
+* {
     margin: 0px;
     padding: 0px;
 }
@@ -78,6 +73,15 @@ div {
 
 .panorama-thumbnail {
     width: 64px;
+}
+
+.panorama-delete {
+    width: 32px;
+}
+
+.delete-button {
+    width: 32px;
+    height: 32px;
 }
 
 .upload-table {

@@ -3,7 +3,7 @@
     {% if user %}
         <div class="panorama-table">
             <div class="panorama-row">
-                <div class="panorama-header"></div>
+                <div class="panorama-header panorama-thumbnail"></div>
                 <div class="panorama-header">Title</div>
                 <div class="panorama-header">Status</div>
                 <div class="panorama-header"></div>
@@ -28,8 +28,10 @@
                             ({{ pano.statusText }})
                         {% endif %}
                     </div>
-                    <div class="panorama-cell">
-                        <a href="/pano/delete/{{ pano.key }}">Delete</a>
+                    <div class="panorama-cell panorama-delete">
+                        <form method="get" action="/pano/delete/{{ pano.key }}">
+                            <input class="delete-button" type="submit" value="X" />
+                        </form>
                     </div>
                 </div>
             {% endfor %}
