@@ -1,10 +1,17 @@
 from google.appengine.ext import db
 from google.appengine.ext import blobstore
 
+class PanoramaStatus():
+    NEW = 'NEW'
+    THUMBNAIL = 'THUMBNAIL'
+    TILES = 'TILES'
+    LIVE = 'LIVE'
+    ERROR = 'ERROR'
+
 class Panorama(db.Model):
     owner = db.UserProperty(required=True)
     title = db.StringProperty(required=True)
-    status = db.StringProperty(required=True)
+    status = db.StringProperty(required=True, default=PanoramaStatus.NEW)
     statusText = db.StringProperty()
     thumbnail = db.BlobProperty()
     heading = db.FloatProperty()

@@ -8,7 +8,7 @@ class UploadHandler(BlobstoreUploadHandler):
             user = users.get_current_user()
             title = self.request.get('title')
             for upload in self.get_uploads('rawImage'):
-                panorama = Panorama(title=title, owner=user, rawBlob=upload, status='NEW')
+                panorama = Panorama(title=title, owner=user, rawBlob=upload)
                 panorama.save()
             self.redirect('/')
         except:
