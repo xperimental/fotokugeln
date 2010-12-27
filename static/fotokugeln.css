@@ -1,7 +1,109 @@
+a {
+    text-decoration: none;
+}
+
+img {
+    border: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+div {
+    margin: 0px;
+    padding: 0px;
+}
+
 .userbox {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 10px;
-    border: 1px solid black
+    float: right;
+    margin-top: 5px;
+    margin-right: 5px;
+    padding: 3px;
+    border: 1px solid black;
+    font-size: 12pt;
+}
+
+.centerbox {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header {
+    background: lightblue;
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    font-size: 20pt;
+    font-family: Verdana, sans-serif;
+}
+
+.content {
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: Verdana, sans-serif;
+}
+
+.panorama-table {
+    width: 100%;
+    display: table;
+    border: 1px dotted lightgray;
+}
+
+.panorama-row {
+    display: table-row;
+}
+
+.panorama-header {
+    display: table-cell;
+    font-weight: bold;
+    background-color: lightgray;
+    padding-bottom: 3px;
+}
+
+.panorama-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.panorama-row-odd {
+}
+
+.panorama-row-even {
+    background-color: lightgray;
+}
+
+.panorama-thumbnail {
+    width: 64px;
+}
+
+.upload-table {
+    display: table;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.upload-title {
+    display: table-caption;
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.upload-row {
+    display: table-row;
+}
+
+.upload-text {
+    display: table-cell;
+    text-align: right;
+    font-weight: bold;
+}
+
+.upload-field {
+    display: table-cell;
 }

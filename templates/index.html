@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block body %}
     {% if user %}
-        <table>
-            <tr>
-                <th></th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Delete</th>
-            </tr>
+        <div class="panorama-table">
+            <div class="panorama-row">
+                <div class="panorama-header"></div>
+                <div class="panorama-header">Title</div>
+                <div class="panorama-header">Status</div>
+                <div class="panorama-header"></div>
+            </div>
             {% for pano in panorama_list %}
-                <tr>
-                    <td>
+                <div class="panorama-row {% cycle panorama-row-odd,panorama-row-even %}">
+                    <div class="panorama-cell panorama-thumbnail">
                         <a href="/pano/raw/{{ pano.key }}">
                             {% if pano.thumbnail %}
                                 <img src="/pano/thumbnail/{{ pano.key }}"/>
@@ -18,38 +18,40 @@
                                 <img src="/static/no_thumb.png"/>
                             {% endif %}
                         </a>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="panorama-cell">
                         {{ pano.title }}
-                    </td>
-                    <td>
+                    </div>
+                    <div class="panorama-cell">
                         {{ pano.statusDescription }}
                         {% if pano.statusText %}
                             ({{ pano.statusText }})
                         {% endif %}
-                    </td>
-                    <td>
+                    </div>
+                    <div class="panorama-cell">
                         <a href="/pano/delete/{{ pano.key }}">Delete</a>
-                    </td>
-                </tr>
+                    </div>
+                </div>
             {% endfor %}
-        </table>
-        <hr />
+        </div>
         <form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
-            <table>
-                <tr>
-                    <th><label for="title">Title:</label></th>
-                    <td><input type="text" name="title"/></td>
-                </tr>
-                <tr>
-                    <th><label for="rawImage">Panorama image:</label></th>
-                    <td><input type="file" name="rawImage"></td>
-                </tr>
-                <tr>
-                    <th/>
-                    <td><input type="submit" value="Upload"/></td>
-                </tr>
-            </table>
+            <div class="upload-table">
+                <div class="upload-title">
+                    Upload new panorama to Fotokugeln:
+                </div>
+                <div class="upload-row">
+                    <div class="upload-text"><label for="title">Title:</label></div>
+                    <div class="upload-field"><input type="text" name="title"/></div>
+                </div>
+                <div class="upload-row">
+                    <div class="upload-text"><label for="rawImage">Panorama image:</label></div>
+                    <div class="upload-field"><input type="file" name="rawImage"></div>
+                </div>
+                <div class="upload-row">
+                    <div class="upload-text"></div>
+                    <div class="upload-field"><input type="submit" value="Upload"/></div>
+                </div>
+            </div>
         </form>
     {% else %}
         Giving your panoramas a spherical home in Google Earth&trade;!
