@@ -14,22 +14,30 @@ class ProcessHandler(RequestHandler):
     def post(self, panoKey):
         panorama = db.get(panoKey)
         if panorama:
-            if panorama.status == PanoramaStatus.NEW:
-                try:
+            try:
+                if panorama.status == PanoramaStatus.NEW:
                     self.checkUpload(panorama)
                     self.checkImage(panorama)
                     panorama.status = PanoramaStatus.THUMBNAIL
                     queue(panorama)
-                except ValueError, detail:
-                    panorama.status = PanoramaStatus.ERROR
-                    panorama.statusText = detail.message
-            elif panorama.status == PanoramaStatus.THUMBNAIL:
-                pass
-            elif panorama.status == PanoramaStatus.TILES:
-                pass
-            else:
-                pass
+                elif panorama.status == PanoramaStatus.THUMBNAIL:
+                    panorama.thumbnail = self.generateThumbnail(panorama)
+                    panorama.status = PanoramaStatus.TILES
+                    queue(panorama)
+                elif panorama.status == PanoramaStatus.TILES:
+                    pass
+                else:
+                    pass
+            except ValueError, detail:
+                panorama.status = PanoramaStatus.ERROR
+                panorama.statusText = detail.message\
+
             panorama.save()
+
+    def generateThumbnail(self, panorama):
+        rawImage = self.readBlobImage(panorama.rawBlob)
+        rawImage.resize(64, 32)
+        return rawImage.execute_transforms(output_encoding=images.JPEG)
 
     def checkUpload(self, panorama):
         if not panorama.rawBlob.content_type == 'image/jpeg':

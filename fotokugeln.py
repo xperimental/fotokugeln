@@ -3,16 +3,17 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from handlers.delete import DeleteHandler
 from handlers.process import ProcessHandler
-from handlers.raw import RawPanoHandler
+from handlers.raw import RawPanoHandler, ThumbnailHandler
 from handlers.index import IndexHandler
 from handlers.upload import UploadHandler
 
 fotokugeln_app = webapp.WSGIApplication(
         [
-                (r'/pano/raw/(.+)', RawPanoHandler),
+                ('/pano/raw/(.+)', RawPanoHandler),
                 ('/pano/upload', UploadHandler),
-                (r'/pano/delete/(.*)', DeleteHandler),
-                ('/pano/process/(.*)', ProcessHandler),
+                ('/pano/delete/(.+)', DeleteHandler),
+                ('/pano/process/(.+)', ProcessHandler),
+                ('/pano/thumbnail/(.+)', ThumbnailHandler),
                 ('/', IndexHandler)
         ], debug=True)
 
