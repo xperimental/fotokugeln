@@ -10,6 +10,7 @@ def queue(panorama):
 
 class ProcessHandler(RequestHandler):
     MAXIMUM_SIZE = 30 * 1024 * 1024
+    MINIMUM_WIDTH = 2048
 
     def post(self, panoKey):
         panorama = db.get(panoKey)
@@ -50,14 +51,17 @@ class ProcessHandler(RequestHandler):
         data = self.readBlobImage(panorama.rawBlob)
         rawWidth = data.width
         rawHeight = data.height
-        if not (rawWidth & (rawWidth - 1)):
-            if rawHeight * 2 == rawWidth:
-                panorama.rawWidth = rawWidth
-                panorama.rawHeight = rawHeight
+        if rawWidth >= self.MINIMUM_WIDTH:
+            if not (rawWidth & (rawWidth - 1)):
+                if rawHeight * 2 == rawWidth:
+                    panorama.rawWidth = rawWidth
+                    panorama.rawHeight = rawHeight
+                else:
+                    raise ValueError("Wrong aspect ratio!")
             else:
-                raise ValueError("Wrong aspect ratio!")
+                raise ValueError("Width no power of 2!")
         else:
-            raise ValueError("Width no power of 2!")
+            raise ValueError("Minimum width is %dpx!" % self.MINIMUM_WIDTH)
 
     def readBlobImage(self, blob):
         reader = blobstore.BlobReader(blob)
