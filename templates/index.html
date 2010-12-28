@@ -28,7 +28,10 @@
                             ({{ pano.statusText }})
                         {% endif %}
                     </div>
-                    <div class="panorama-cell panorama-delete">
+                    <div class="panorama-cell panorama-actions">
+                        <form method="get" action="/pano/view/{{ pano.key }}">
+                            <input class="view-button" type="submit" value="View" />
+                        </form>
                         <form method="get" action="/pano/delete/{{ pano.key }}">
                             <input class="delete-button" type="submit" value="X" />
                         </form>

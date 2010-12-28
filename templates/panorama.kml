@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+     xmlns:gx="http://www.google.com/kml/ext/2.2"
+     xmlns:kml="http://www.opengis.net/kml/2.2"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+    <PhotoOverlay>
+        <name>{{ pano.title }}</name>
+        <description>
+            Created using Fotokugeln by {{ pano.owner.nickname }}.
+        </description>
+        <Camera>
+            <longitude>{{ pano.longitude }}</longitude>
+            <latitude>{{ pano.latitude }}</latitude>
+            <altitude>11.0</altitude>
+            <heading>{{ pano.heading }}</heading>
+            <tilt>90.0</tilt>
+            <roll>0.0</roll>
+            <altitudeMode>relativeToGround</altitudeMode>
+            <gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+        </Camera>
+        <Style>
+            <IconStyle>
+                <Icon>
+                    <href>:/camera_mode.png</href>
+                </Icon>
+            </IconStyle>
+            <ListStyle>
+                <listItemType>check</listItemType>
+                <ItemIcon>
+                    <state>open closed error fetching0 fetching1
+                        fetching2
+                    </state>
+                    <href>
+                        http://maps.google.com/mapfiles/kml/shapes/camera-lv.png
+                    </href>
+                </ItemIcon>
+                <bgColor>00ffffff</bgColor>
+                <maxSnippetLines>2</maxSnippetLines>
+            </ListStyle>
+        </Style>
+        <Point>
+            <altitudeMode>relativeToGround</altitudeMode>
+            <gx:altitudeMode>relativeToGround</gx:altitudeMode>
+            <coordinates>{{ pano.longitude }},{{ pano.latitude }},11.0</coordinates>
+        </Point>
+        <ViewVolume>
+            <leftFov>-180</leftFov>
+            <rightFov>180</rightFov>
+            <bottomFov>-90</bottomFov>
+            <topFov>90</topFov>
+            <near>10</near>
+        </ViewVolume>
+        <shape>sphere</shape>
+        <Icon>
+            <href>{{ server_url }}/pano/tile/{{ pano.key }}/$[level]/$[x]/$[y]</href>
+        </Icon>
+        <ImagePyramid>
+            <tileSize>{{ tilesize }}</tileSize>
+            <maxWidth>{{ pano.rawWidth }}</maxWidth>
+            <maxHeight>{{ pano.rawHeight }}</maxHeight>
+            <gridOrigin>upperLeft</gridOrigin>
+        </ImagePyramid>
+    </PhotoOverlay>
+</kml>

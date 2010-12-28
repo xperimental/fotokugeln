@@ -15,6 +15,10 @@ img {
     border: 0px;
 }
 
+form {
+    display: inline;
+}
+
 .userbox {
     float: right;
     margin-top: 5px;
@@ -79,13 +83,20 @@ img {
     width: 64px;
 }
 
-.panorama-delete {
-    width: 32px;
+.panorama-actions {
+    width: 110px;
+}
+
+.view-button {
+    width: 64px;
+    height: 32px;
+    border: 1px solid black;
 }
 
 .delete-button {
     width: 32px;
     height: 32px;
+    border: 1px solid black;
 }
 
 .upload-table {
