@@ -41,10 +41,10 @@ class TileGenerator():
             else:
                 xInput = inputWidth / xTiles
                 yInput = inputHeight / yTiles
-                for y in range(0, yTiles - 1):
+                for y in range(0, yTiles):
                     top = (y * yInput) / float(inputHeight)
                     bottom = (y * yInput + yInput) / float(inputHeight)
-                    for x in range(0, xTiles - 1):
+                    for x in range(0, xTiles):
                         left = (x * xInput) / float(inputWidth)
                         right = (x * xInput + xInput) / float(inputWidth)
 
