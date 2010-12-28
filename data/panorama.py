@@ -35,6 +35,9 @@ class Panorama(db.Model):
         else:
             return "Unknown status"
 
+    def live(self):
+        return self.status == PanoramaStatus.LIVE
+
 class PanoramaTile(db.Model):
     data = db.BlobProperty(required=True)
     panoramaKey = db.ReferenceProperty(Panorama, required=True)

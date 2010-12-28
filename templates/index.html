@@ -30,7 +30,7 @@
                     </div>
                     <div class="panorama-cell panorama-actions">
                         <form method="get" action="/pano/view/{{ pano.key }}">
-                            <input class="view-button" type="submit" value="View" />
+                            <input class="view-button" type="submit" value="View" {% if not pano.live %}disabled="disabled"{% endif %} />
                         </form>
                         <form method="get" action="/pano/delete/{{ pano.key }}">
                             <input class="delete-button" type="submit" value="X" />
