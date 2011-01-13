@@ -11,7 +11,8 @@ def queue(panorama):
 
 class ProcessHandler(RequestHandler):
     MAXIMUM_SIZE = 30 * 1024 * 1024
-    MINIMUM_WIDTH = 2048
+    MINIMUM_WIDTH = 1024
+    MAXIMUM_WIDTH = 8192
 
     def post(self, panoKey):
         panorama = db.get(panoKey)
@@ -58,14 +59,17 @@ class ProcessHandler(RequestHandler):
         rawWidth = data.width
         rawHeight = data.height
         if rawWidth >= self.MINIMUM_WIDTH:
-            if not (rawWidth & (rawWidth - 1)):
-                if rawHeight * 2 == rawWidth:
-                    panorama.rawWidth = rawWidth
-                    panorama.rawHeight = rawHeight
+            if rawWidth <= self.MAXIMUM_WIDTH:
+                if not (rawWidth & (rawWidth - 1)):
+                    if rawHeight * 2 == rawWidth:
+                        panorama.rawWidth = rawWidth
+                        panorama.rawHeight = rawHeight
+                    else:
+                        raise ValueError("Wrong aspect ratio!")
                 else:
-                    raise ValueError("Wrong aspect ratio!")
+                    raise ValueError("Width no power of 2!")
             else:
-                raise ValueError("Width no power of 2!")
+                raise ValueError("Maximum width is %dpx!" % self.MAXIMUM_WIDTH)
         else:
             raise ValueError("Minimum width is %dpx!" % self.MINIMUM_WIDTH)
 
