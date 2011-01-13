@@ -14,6 +14,7 @@ class RawPanoHandler(BlobstoreDownloadHandler):
             self.error(401)
         else:
             self.response.headers['Content-disposition'] = 'attachment; filename=%s' % panorama.rawBlob.filename
+            self.response.headers['Content-length'] = panorama.rawBlob.size
             self.send_blob(panorama.rawBlob)
 
 class ThumbnailHandler(RequestHandler):
