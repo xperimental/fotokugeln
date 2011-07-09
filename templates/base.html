@@ -4,15 +4,17 @@
     <link rel="stylesheet" href="/static/fotokugeln.css"/>
 </head>
 <body>
-<div class="centerbox">
-    <div class="userbox">
-        {% if user %}
-            Hi {{ user }}! <a href="{{ logout_url }}">Logout</a>
-        {% else %}
-            <a href="{{ login_url }}">Login</a>
-        {% endif %}
-    </div>
-    <div class="header">Fotokugeln</div>
+<div class="wrapper">
+    <header>
+        <div class="userbox">
+            {% if user %}
+                Hi {{ user }}!<a href="{{ logout_url }}" class="logout-btn button">Logout</a>
+            {% else %}
+                <a href="{{ login_url }}" class="login-btn button">Login</a>
+            {% endif %}
+        </div>
+        <h1>Fotokugeln</h1>
+    </header>
     <div class="content">
         {% block body %}
         {% endblock %}

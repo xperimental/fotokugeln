@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 {% block body %}
     {% if user %}
-        <div class="panorama-table">
-            <div class="panorama-row">
-                <div class="panorama-header panorama-thumbnail"></div>
-                <div class="panorama-header">Title</div>
-                <div class="panorama-header">Status</div>
-                <div class="panorama-header"></div>
-            </div>
-            {% for pano in panorama_list %}
-                <div class="panorama-row {% cycle panorama-row-odd,panorama-row-even %}">
-                    <div class="panorama-cell panorama-thumbnail">
+        <table class="panorama-table">
+            <thead>
+                <tr class="panorama-header">
+                    <td class="td-first">Preview</td>
+                    <td class="td-1">Title</td>
+                    <td class="td-2">Status</td>
+                    <td class="td-last"></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pano in panorama_list %}
+                <tr class="panorama-row {% cycle tr-odd,tr-even %}">
+                    <td class="td-first">
                         <a href="/pano/raw/{{ pano.key }}">
                             {% if pano.thumbnail %}
                                 <img src="/pano/thumbnail/{{ pano.key }}"/>
@@ -18,55 +21,46 @@
                                 <img src="/static/no_thumb.png"/>
                             {% endif %}
                         </a>
-                    </div>
-                    <div class="panorama-cell">
-                        {{ pano.title }}
-                    </div>
-                    <div class="panorama-cell">
+                    </td>
+                    <td class="td-1">{{ pano.title }}</td>
+                    <td class="td-2">
                         {{ pano.statusDescription }}
                         {% if pano.statusText %}
                             ({{ pano.statusText }})
                         {% endif %}
-                    </div>
-                    <div class="panorama-cell panorama-actions">
+                    </td>
+                    <td class="td-last">
                         <form method="get" action="/pano/view/{{ pano.key }}">
-                            <input class="view-button" type="submit" value="View" {% if not pano.live %}disabled="disabled"{% endif %} />
+                            <input class="view-btn button" type="submit" title="View Pano as KML" value="View" {% if not pano.live %}disabled="disabled"{% endif %} />
                         </form>
                         <form method="get" action="/pano/delete/{{ pano.key }}">
-                            <input class="delete-button" type="submit" value="X" />
+                            <input class="delete-btn button" type="submit" title="Delete Pano" value="Delete" />
                         </form>
-                    </div>
-                </div>
-            {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="panorama-upload">
+             <form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
+                 <fieldset>
+                     <legend>Upload new panorama to Fotokugeln:</legend>
+                     <label for="title">Title: </label><input type="text" name="title"/>
+                     <br />
+                     <label for="rawImage">Panorama image: </label><input type="file" name="rawImage"/>
+                     <br />
+                     <input type="submit" class="upload-btn button" value="Upload"/>
+                     <p class="upload-notice info">
+                         Maximum file size is 30 MB.<br /><br />
+                         Panorama images need to have dimensions which are powers of two,
+                         where the width is twice the height.<br /><br />
+                         Minimum image size is 1024 by 512 pixels, maximum size is 8192 by 4096 pixels.
+                     </p>
+                 </fieldset>
+             </form>
         </div>
-        <form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
-            <div class="upload-table">
-                <div class="upload-title">
-                    Upload new panorama to Fotokugeln:
-                </div>
-                <div class="upload-row">
-                    <div class="upload-text"><label for="title">Title:</label></div>
-                    <div class="upload-field"><input type="text" name="title"/></div>
-                </div>
-                <div class="upload-row">
-                    <div class="upload-text"><label for="rawImage">Panorama image:</label></div>
-                    <div class="upload-field"><input type="file" name="rawImage"></div>
-                </div>
-                <div class="upload-row">
-                    <div class="upload-text"></div>
-                    <div class="upload-field upload-notice">
-                        <p>Maximum file size is 30MiB.</p>
-                        <p>Panorama images need to have dimensions which are powers of two,
-                            where the width is twice the height.</p>
-                        <p>Minimum image size is 1024 by 512 pixels, maximum size is 8192 by 4096 pixels.</p>
-                    </div>
-                </div>
-                <div class="upload-row">
-                    <div class="upload-text"></div>
-                    <div class="upload-field"><input type="submit" value="Upload"/></div>
-                </div>
-            </div>
-        </form>
+
     {% else %}
         Giving your panoramas a spherical home in Google Earth&trade;!
     {% endif %}

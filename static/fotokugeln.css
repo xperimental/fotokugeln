@@ -1,38 +1,52 @@
-* {
-    margin: 0px;
-    padding: 0px;
-}
+*{margin:0;padding:0;}
+html,body{font-size:10px;}
+p{margin-bottom:5pt;}
+a{color:#000;text-decoration:none;}
+img{border:0;}
+form{display:inline;}
+h1{font-family:Verdana;font-size:1.7em;}
 
-p {
-    margin-bottom: 5pt;
+/*Messages*/
+.info,.success,.warning,.error,.validation{background-position:5px 10px;background-repeat:no-repeat;border:1px solid;font-size:12px;margin:10px 0;padding:10px 10px 10px 30px;}
+.info{background-color:#BDE5F8;background-image:url('/static/info.png');color:#00529B;}
+.success{background-color:#DFF2BF;background-image:url('/static/success.png');color:#4F8A10;}
+.warning{background-color:#FEEFB3;background-image:url('/static/warning.png');color:#9F6000;}
+.error{background-color:#FFBABA;background-image:url('/static/error.png');color:#D8000C;}
+/*Buttons*/
+.button{
+    background:#efefef;
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 14px/100% Arial, Helvetica, sans-serif;
+	padding: .5em 1em .5em 2em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em;
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    margin-left:20px;
 }
+.button:hover {text-decoration: none;}
+.button:active {position: relative;top: 1px;}
+.logout-btn {background:#efefef url('/static/door_in.png') no-repeat 7px center;}
+.login-btn {background: #efefef url('/static/key.png') no-repeat 7px center;padding-left:2.5em;}
+.view-btn {background: #efefef url('/static/page_save.png') no-repeat 7px center;margin:0;padding-top:.3em;
+    padding-bottom:.3em; padding-left:2em;}
+.delete-btn {background: #efefef url('/static/delete.png') no-repeat 7px center;margin:0;padding-top:.3em;
+    padding-bottom:.3em; padding-left:2em;}
+.upload-btn{background: #efefef url('/static/picture_add.png') no-repeat 7px center;}
+.submit {margin-left:0;}
+input.button{border:0;}
 
-a {
-    text-decoration: none;
-}
-
-img {
-    border: 0px;
-}
-
-form {
-    display: inline;
-}
-
-.userbox {
-    float: right;
-    margin-top: 5px;
-    margin-right: 5px;
-    padding: 3px;
-    border: 1px solid black;
-    font-size: 12pt;
-}
-
-.centerbox {
-    width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
+/*Layout*/
+.wrapper{font-size:1.2em;margin-left:auto;margin-right:auto;width:800px;}
+header {padding:10px;position: relative;}
+.userbox {float: right;font-size: 12pt;text-align: right;}
 
 .header {
     background: lightblue;
@@ -42,96 +56,34 @@ form {
     font-size: 20pt;
     font-family: Verdana, sans-serif;
 }
-
 .content {
     padding-top: 5px;
     padding-left: 10px;
     padding-right: 10px;
     font-family: Verdana, sans-serif;
 }
-
+/*Panorama Auflistung*/
 .panorama-table {
+    border-collapse: collapse;
+    font-size:1.2em;
     width: 100%;
-    display: table;
-    border: 1px dotted lightgray;
 }
-
-.panorama-row {
-    display: table-row;
-}
-
-.panorama-header {
-    display: table-cell;
-    font-weight: bold;
+.panorama-header td{
+    font-weight:700;
     background-color: lightgray;
-    padding-bottom: 3px;
+    padding: 3px;
 }
+.tr-odd {}
+.tr-even {background-color: lightgray;}
+.td-last{text-align: right;}
+/*Upload Bereich*/
+.panorama-upload{font-size:1.2em;margin-top:40px;}
+.panorama-upload fieldset{border: 0;}
+.panorama-upload legend{display:block;background:lightgray;padding:3px;width:773px;}
+.panorama-upload .upload-notice{margin-top:10px;}
+.panorama-upload label{display:block;float:left;margin:5px 0;width:170px;}
+.panorama-upload input{margin:5px 0;}
+.panorama-upload br{clear:both;}
 
-.panorama-cell {
-    display: table-cell;
-    vertical-align: middle;
-}
 
-.panorama-row-odd {
-}
 
-.panorama-row-even {
-    background-color: lightgray;
-}
-
-.panorama-thumbnail {
-    width: 64px;
-}
-
-.panorama-actions {
-    width: 110px;
-}
-
-.view-button {
-    width: 64px;
-    height: 32px;
-    border: 1px solid black;
-}
-
-.delete-button {
-    width: 32px;
-    height: 32px;
-    border: 1px solid black;
-}
-
-.upload-table {
-    display: table;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.upload-title {
-    display: table-caption;
-    text-align: center;
-    font-weight: bold;
-    padding-bottom: 5px;
-}
-
-.upload-row {
-    display: table-row;
-}
-
-.upload-text {
-    display: table-cell;
-    text-align: right;
-    font-weight: bold;
-}
-
-.upload-field {
-    display: table-cell;
-}
-
-.upload-notice {
-    border: 1px solid black;
-    padding: 5px;
-    background-color: darkgray;
-    color: black;
-    font-size: 11pt;
-    width: 100px;
-}
